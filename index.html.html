@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ख़र्चा नज़र · Kharch Nazar</title>
+<style>
+  :root{
+    --paper:#FAF6EC;
+    --paper-raised:#FFFFFF;
+    --ink:#1F2A24;
+    --ink-soft:#5B6660;
+    --gold:#C9A227;
+    --gold-deep:#9C7B14;
+    --teal:#2F6F62;
+    --teal-deep:#1E4B41;
+    --rust:#B54834;
+    --line:#E4DCC8;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:60px;
+  }
+  header{
+    padding:32px 20px 24px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, #FFFDF8 0%, var(--paper) 100%);
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .brand .rupee{
+    font-size:34px;
+    font-family:ui-serif, Georgia, "Noto Serif Devanagari", serif;
+    color:var(--gold-deep);
+  }
+  .brand h1{
+    font-family:ui-serif, Georgia, "Noto Serif Devanagari", serif;
+    font-size:26px;
+    font-weight:600;
+    margin:0;
+    letter-spacing:0.2px;
+  }
+  .brand .sub{
+    color:var(--ink-soft);
+    font-size:13px;
+    margin-top:2px;
+  }
+  main{
+    max-width:760px;
+    margin:0 auto;
+    padding:24px 20px;
+  }
+  .card{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:18px;
+  }
+  .card h2{
+    font-family:ui-serif, Georgia, "Noto Serif Devanagari", serif;
+    font-size:16px;
+    margin:0 0 14px;
+    color:var(--teal-deep);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  /* form */
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .form-grid .full{grid-column:1/-1;}
+  label{
+    display:block;
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-bottom:5px;
+    font-weight:600;
+  }
+  input, select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#FFFEFB;
+    font-size:14px;
+    color:var(--ink);
+    font-family:inherit;
+  }
+  input:focus, select:focus{
+    outline:none;
+    border-color:var(--teal);
+  }
+  .btn{
+    border:none;
+    border-radius:9px;
+    padding:11px 18px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .btn-primary{
+    background:var(--teal);
+    color:#fff;
+  }
+  .btn-primary:hover{background:var(--teal-deep);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--rust);
+    padding:4px 8px;
+    font-size:12px;
+  }
+  .form-actions{
+    grid-column:1/-1;
+    margin-top:4px;
+  }
+  /* month switcher */
+  .month-nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+  }
+  .month-nav button{
+    background:var(--paper-raised);
+    border:1px solid var(--line);
+    border-radius:8px;
+    width:34px;height:34px;
+    cursor:pointer;
+    font-size:16px;
+    color:var(--teal-deep);
+  }
+  .month-label{
+    font-family:ui-serif, Georgia, "Noto Serif Devanagari", serif;
+    font-size:18px;
+    font-weight:600;
+  }
+  /* summary stats */
+  .stat-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:12px;
+  }
+  .stat{
+    background:#FFFEFB;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:ui-serif, Georgia, serif;
+    font-size:22px;
+    font-weight:700;
+    color:var(--teal-deep);
+  }
+  .stat.warn .num{color:var(--rust);}
+  .stat .lbl{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .budget-row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-top:14px;
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .budget-row input{width:120px;}
+  /* category bars */
+  .cat-row{
+    display:grid;
+    grid-template-columns:110px 1fr 70px;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:13px;
+  }
+  .cat-name{font-weight:600;}
+  .bar-track{
+    background:#EFE9D8;
+    border-radius:6px;
+    height:14px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    border-radius:6px;
+    background:linear-gradient(90deg, var(--gold), var(--gold-deep));
+  }
+  .cat-amt{text-align:right;color:var(--ink-soft);}
+  .insight{
+    margin-top:14px;
+    padding:12px 14px;
+    background:#F4EFDD;
+    border-left:3px solid var(--gold-deep);
+    border-radius:0 8px 8px 0;
+    font-size:13px;
+    color:var(--ink);
+  }
+  /* entries list */
+  .day-group{margin-bottom:16px;}
+  .day-heading{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-bottom:8px;
+    padding-bottom:6px;
+    border-bottom:1px dashed var(--line);
+  }
+  .entry{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #F1EBDA;
+  }
+  .entry:last-child{border-bottom:none;}
+  .entry-left{display:flex;flex-direction:column;gap:2px;}
+  .entry-cat{
+    font-size:12px;
+    font-weight:700;
+    color:var(--teal-deep);
+  }
+  .entry-note{font-size:12px;color:var(--ink-soft);}
+  .entry-right{display:flex;align-items:center;gap:10px;}
+  .entry-amt{font-family:ui-serif,Georgia,serif;font-weight:700;font-size:15px;}
+  .empty{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13px;
+    padding:24px 0;
+  }
+  footer{
+    text-align:center;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:20px;
+  }
+  @media (max-width:480px){
+    .form-grid{grid-template-columns:1fr;}
+    .stat-row{grid-template-columns:1fr 1fr;}
+    .stat-row .stat:last-child{grid-column:1/-1;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="rupee">₹</span>
+    <div>
+      <h1>ख़र्चा नज़र</h1>
+      <div class="sub">Kharch Nazar — har paisa ka hisaab, offline</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="card">
+    <h2><span class="eyebrow">Naya kharcha</span></h2>
+    <form id="entryForm" class="form-grid">
+      <div>
+        <label for="f-date">Date</label>
+        <input type="date" id="f-date" required>
+      </div>
+      <div>
+        <label for="f-amount">Amount (₹)</label>
+        <input type="number" id="f-amount" min="0" step="1" placeholder="0" required>
+      </div>
+      <div>
+        <label for="f-category">Category</label>
+        <select id="f-category">
+          <option>Khana / Food</option>
+          <option>Transport</option>
+          <option>Shopping</option>
+          <option>Bills / Rent</option>
+          <option>Entertainment</option>
+          <option>Health</option>
+          <option>Grocery</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="f-note">Note (optional)</label>
+        <input type="text" id="f-note" placeholder="e.g. chai, uber, movie">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">+ Add kharcha</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="month-nav">
+      <button id="prevMonth">‹</button>
+      <div class="month-label" id="monthLabel"></div>
+      <button id="nextMonth">›</button>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="num" id="statTotal">₹0</div>
+        <div class="lbl">Is mahine kharcha</div>
+      </div>
+      <div class="stat">
+        <div class="num" id="statAvg">₹0</div>
+        <div class="lbl">Daily average</div>
+      </div>
+      <div class="stat" id="statBudgetBox">
+        <div class="num" id="statLeft">—</div>
+        <div class="lbl">Budget bacha</div>
+      </div>
+    </div>
+
+    <div class="budget-row">
+      Monthly budget:
+      <input type="number" id="budgetInput" min="0" step="100" placeholder="e.g. 15000">
+      <button class="btn btn-primary" id="saveBudget" style="padding:7px 12px;">Save</button>
+    </div>
+
+    <div class="insight" id="insightBox"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="eyebrow">Category-wise breakdown</span></h2>
+    <div id="catBreakdown"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="eyebrow">Din-wise entries</span></h2>
+    <div id="entriesList"></div>
+  </div>
+
+  <footer>Sab data sirf is device pe, is browser mein save hota hai. Koi internet nahi chahiye.</footer>
+</main>
+
+<script>
+  const STORAGE_KEY = 'kharch_nazar_entries_v1';
+  const BUDGET_KEY = 'kharch_nazar_budgets_v1';
+
+  let entries = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  let budgets = JSON.parse(localStorage.getItem(BUDGET_KEY) || '{}');
+
+  let viewDate = new Date();
+  viewDate.setDate(1);
+
+  const dateInput = document.getElementById('f-date');
+  dateInput.value = new Date().toISOString().slice(0,10);
+
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    localStorage.setItem(BUDGET_KEY, JSON.stringify(budgets));
+  }
+
+  function monthKey(d){
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  }
+
+  function fmtMoney(n){
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
+
+  function monthLabel(d){
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    return months[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  const catColors = {};
+
+  document.getElementById('entryForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const date = document.getElementById('f-date').value;
+    const amount = parseFloat(document.getElementById('f-amount').value);
+    const category = document.getElementById('f-category').value;
+    const note = document.getElementById('f-note').value.trim();
+    if(!date || !amount || amount <= 0) return;
+
+    entries.push({
+      id: Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      date, amount, category, note
+    });
+    save();
+    document.getElementById('f-amount').value = '';
+    document.getElementById('f-note').value = '';
+
+    const entryMonth = date.slice(0,7);
+    const curMonth = monthKey(viewDate);
+    if(entryMonth !== curMonth){
+      viewDate = new Date(date + '-01T00:00:00');
+      viewDate.setDate(1);
+    }
+    render();
+  });
+
+  document.getElementById('prevMonth').addEventListener('click', function(){
+    viewDate.setMonth(viewDate.getMonth() - 1);
+    render();
+  });
+  document.getElementById('nextMonth').addEventListener('click', function(){
+    viewDate.setMonth(viewDate.getMonth() + 1);
+    render();
+  });
+
+  document.getElementById('saveBudget').addEventListener('click', function(){
+    const key = monthKey(viewDate);
+    const val = parseFloat(document.getElementById('budgetInput').value);
+    if(val > 0){
+      budgets[key] = val;
+      save();
+      render();
+    }
+  });
+
+  function deleteEntry(id){
+    entries = entries.filter(e => e.id !== id);
+    save();
+    render();
+  }
+  window.deleteEntry = deleteEntry;
+
+  function render(){
+    const key = monthKey(viewDate);
+    document.getElementById('monthLabel').textContent = monthLabel(viewDate);
+    document.getElementById('budgetInput').value = budgets[key] || '';
+
+    const monthEntries = entries.filter(e => e.date.slice(0,7) === key);
+    const total = monthEntries.reduce((s,e) => s + e.amount, 0);
+
+    document.getElementById('statTotal').textContent = fmtMoney(total);
+
+    const today = new Date();
+    const isCurrentMonth = key === monthKey(today);
+    const daysElapsed = isCurrentMonth ? today.getDate() : new Date(viewDate.getFullYear(), viewDate.getMonth()+1, 0).getDate();
+    const avg = daysElapsed > 0 ? total / daysElapsed : 0;
+    document.getElementById('statAvg').textContent = fmtMoney(avg);
+
+    const budgetBox = document.getElementById('statBudgetBox');
+    const leftEl = document.getElementById('statLeft');
+    if(budgets[key]){
+      const left = budgets[key] - total;
+      leftEl.textContent = fmtMoney(Math.abs(left));
+      budgetBox.classList.toggle('warn', left < 0);
+      leftEl.parentElement.querySelector('.lbl').textContent = left < 0 ? 'Budget se zyada' : 'Budget bacha';
+    } else {
+      leftEl.textContent = '—';
+      budgetBox.classList.remove('warn');
+      leftEl.parentElement.querySelector('.lbl').textContent = 'Budget set karein';
+    }
+
+    // category breakdown
+    const catTotals = {};
+    monthEntries.forEach(e => {
+      catTotals[e.category] = (catTotals[e.category] || 0) + e.amount;
+    });
+    const sortedCats = Object.entries(catTotals).sort((a,b) => b[1]-a[1]);
+    const maxCat = sortedCats.length ? sortedCats[0][1] : 0;
+
+    const catBox = document.getElementById('catBreakdown');
+    if(sortedCats.length === 0){
+      catBox.innerHTML = '<div class="empty">Is mahine abhi koi entry nahi hai.</div>';
+    } else {
+      catBox.innerHTML = sortedCats.map(([cat, amt]) => {
+        const pct = maxCat > 0 ? Math.round((amt/maxCat)*100) : 0;
+        return `<div class="cat-row">
+          <div class="cat-name">${cat}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <div class="cat-amt">${fmtMoney(amt)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // insight
+    const insightBox = document.getElementById('insightBox');
+    if(sortedCats.length > 0){
+      const [topCat, topAmt] = sortedCats[0];
+      const pctOfTotal = total > 0 ? Math.round((topAmt/total)*100) : 0;
+      insightBox.textContent = `Sabse zyada paisa "${topCat}" mein ja raha hai — ${fmtMoney(topAmt)} (${pctOfTotal}% of total). Yahan thoda kaatne se sabse zyada bachat hogi.`;
+    } else {
+      insightBox.textContent = 'Entries add karna shuru karein — yahan aapko pata chalega kahan sabse zyada paisa ja raha hai.';
+    }
+
+    // entries list grouped by day, most recent first
+    const listBox = document.getElementById('entriesList');
+    if(monthEntries.length === 0){
+      listBox.innerHTML = '<div class="empty">Koi entry nahi. Upar form se add karein.</div>';
+    } else {
+      const byDate = {};
+      monthEntries.forEach(e => {
+        if(!byDate[e.date]) byDate[e.date] = [];
+        byDate[e.date].push(e);
+      });
+      const dates = Object.keys(byDate).sort().reverse();
+      listBox.innerHTML = dates.map(d => {
+        const dayTotal = byDate[d].reduce((s,e) => s+e.amount, 0);
+        const dObj = new Date(d + 'T00:00:00');
+        const dayLabel = dObj.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short' });
+        const rows = byDate[d].map(e => `
+          <div class="entry">
+            <div class="entry-left">
+              <span class="entry-cat">${e.category}</span>
+              ${e.note ? `<span class="entry-note">${e.note}</span>` : ''}
+            </div>
+            <div class="entry-right">
+              <span class="entry-amt">${fmtMoney(e.amount)}</span>
+              <button class="btn btn-ghost" onclick="deleteEntry('${e.id}')">Delete</button>
+            </div>
+          </div>`).join('');
+        return `<div class="day-group">
+          <div class="day-heading">${dayLabel} · ${fmtMoney(dayTotal)}</div>
+          ${rows}
+        </div>`;
+      }).join('');
+    }
+  }
+
+  render();
+</script>
+
+</body>
+</html>
